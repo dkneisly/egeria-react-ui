@@ -1,0 +1,31 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: egeria-ui-build
+  labels:
+    name: egeria-ui-build
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'egeria-ui:latest'
+  resources: {}
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  serviceAccount: builder
+  source:
+    type: Git
+    git:
+      uri: >-
+        https://github.com/dkneisly/egeria-react-ui.git
+    contextDir: /
+  triggers:
+    - type: Generic
+      generic:
+        secret: egeria-githook
+    - type: ConfigChange
+  runPolicy: Serial
