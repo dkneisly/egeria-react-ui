@@ -3,7 +3,6 @@
 
 const getServerInfoFromEnv = () => {
 
-  console.log(" getServerInfoFromEnv() 1");
   let modifiableServers = {};
   // capitals as Windows can be case sensitive.
   const env_prefix = "EGERIA_PRESENTATIONSERVER_SERVER_";
@@ -14,8 +13,7 @@ const getServerInfoFromEnv = () => {
   for (const envVariable in env) {
     try {
       if (envVariable.startsWith(env_prefix)) {
-        // Found an environment variable with out prefix
-        console.log(" getServerInfoFromEnv() 2");
+        // Found an environment variable with our prefix
         if (envVariable.length == env_prefix.length - 1) {
           console.log(
             "there is no server name specified in the environment Variable envVariable.length=" +
