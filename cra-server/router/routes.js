@@ -11,8 +11,8 @@ const getAxiosInstance = require('../functions/getAxiosInstance');
 const validateURL = require('../validations/validateURL');
 const validateAdminURL = require('../validations/validateAdminURL');
 
-const cert = fs.readFileSync(path.join(__dirname, '../../') + "/../presentation-server/ssl/keys/server.cert");
-const key = fs.readFileSync(path.join(__dirname, '../../') + "/../presentation-server/ssl/keys/server.key");
+const cert = fs.readFileSync(path.join(__dirname, '../../ssl/keys/server.cert'));
+const key = fs.readFileSync(path.join(__dirname, '../../ssl/keys/server.key'));
 
 /**
  * Middleware to handle post requests that start with /login i.e. the login request. The tenant segment has been removed by previous middleware. 
@@ -67,9 +67,9 @@ router.get("/user", (req, res) => {
   }
 });
 
-const staticJoinedPath = path.join(__dirname, "../../dist");
-router.use(express.static(staticJoinedPath, { index: false }));
-const joinedPath = path.join(__dirname, "../../dist", "index.html");
+// const staticJoinedPath = path.join(__dirname, "../../cra-client/build");
+// router.use(express.static(staticJoinedPath, { index: false }));
+const joinedPath = path.join(__dirname, "../../cra-client/build", "index.html");
 /**
  * Process login url,
  */
@@ -97,7 +97,7 @@ router.post("/servers/*", (req, res) => {
       })
       .catch(function (error) {
         console.log(error);
-        res.status(400).send(error);
+        res.status(400).send("Platform unavailable");
       })
       .then(function () {
         // always executed
@@ -130,7 +130,7 @@ router.put("/servers/*", (req, res) => {
       })
       .catch(function (error) {
         console.log(error);
-        res.status(400).send(error);
+        res.status(400).send("Platform unavailable");
       })
       .then(function () {
         // always executed
@@ -161,7 +161,7 @@ router.delete("/servers/*", (req, res) => {
       })
       .catch(function (error) {
         console.log(error);
-        res.status(400).send(error);
+        res.status(400).send("Platform unavailable");
       })
       .then(function () {
         // always executed
@@ -190,7 +190,7 @@ router.get("/servers/*", (req, res) => {
       })
       .catch(function (error) {
         console.log(error);
-        res.status(400).send(error);
+        res.status(400).send("Platform unavailable");
       })
       .then(function () {
         // always executed
@@ -236,7 +236,7 @@ router.get("/open-metadata/admin-services/*", (req, res) => {
     })
     .catch(function (error) {
       console.error({error});
-      res.status(400).send(error);
+      res.status(400).send("Platform unavailable");
     })
 });
 
@@ -280,7 +280,7 @@ router.post("/open-metadata/admin-services/*", (req, res) => {
     })
     .catch(function (error) {
       console.log(error);
-      res.status(400).send(error);
+      res.status(400).send("Platform unavailable");
     });
 });
 
@@ -323,7 +323,7 @@ router.delete("/open-metadata/admin-services/*", (req, res) => {
     })
     .catch(function (error) {
       console.log(error);
-      res.status(400).send(error);
+      res.status(400).send("Platform unavailable");
     });
 });
 
@@ -359,7 +359,7 @@ router.get("/open-metadata/platform-services/*", (req, res) => {
     })
     .catch(function (error) {
       console.error({error});
-      res.status(400).send(error);
+      res.status(400).send("Platform unavailable");
     })
 });
 
