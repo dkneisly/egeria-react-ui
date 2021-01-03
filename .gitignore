@@ -30,6 +30,7 @@ __MACOSX
 
 package-lock.json
 **/node_modules/**
+.env
 
 # vscode editor
 **/.vscode*/**
