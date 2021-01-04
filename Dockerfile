@@ -17,8 +17,8 @@ ENV NODE_ENV=production
 ENV EGERIA_PRESENTATIONSERVER_SERVER_datelake={"remoteServerName":"usafView1","remoteURL":"https://dev-kaiju-egeria-datalake:9443"}
 
 WORKDIR /app
-# COPY --from=build /app/cra-client/build /cra-client/build
-COPY cra-client/build ./cra-client/build
+COPY --from=build /app/cra-client/build /cra-client/build
+# COPY cra-client/build ./cra-client/build
 COPY cra-client/public ./cra-client/public
 COPY cra-server ./cra-server
 COPY ssl ./ssl
