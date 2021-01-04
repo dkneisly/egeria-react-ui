@@ -1,14 +1,14 @@
-# # stage 1
-# FROM node:erbium-alpine as client-build
-# ENV PATH /app/node_modules/.bin:$PATH
-# ENV NODE_OPTIONS=--max-old-space-size=8192
+# stage 1
+FROM node:erbium-alpine as client-build
+ENV PATH /app/node_modules/.bin:$PATH
+ENV NODE_OPTIONS=--max-old-space-size=8192
 
-# WORKDIR /app
-# COPY cra-client ./cra-client
+WORKDIR /app
+COPY cra-client ./cra-client
 
-# WORKDIR /app/cra-client
-# RUN npm install
-# RUN npm run build
+WORKDIR /app/cra-client
+RUN npm install
+RUN npm run build
 
 # stage 2
 FROM node:erbium-alpine

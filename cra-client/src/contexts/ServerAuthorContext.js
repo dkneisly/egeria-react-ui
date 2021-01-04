@@ -14,6 +14,11 @@ import discoveryEngines from "../components/ServerAuthor/defaults/discoveryEngin
 import stewardshipEngines from "../components/ServerAuthor/defaults/stewardshipEngines";
 import integrationServices from "../components/ServerAuthor/defaults/integrationServices";
 
+import fetchAccessServices from "../components/ServerAuthor/platformServices/fetchAccessServices";
+import fetchKnownServers from "../components/ServerAuthor/platformServices/fetchKnownServers";
+
+const kafkaURL = process.env.kafkaURL || "kafka:9092";
+
 export const ServerAuthorContext = createContext();
 export const ServerAuthorContextConsumer = ServerAuthorContext.Consumer;
 
@@ -32,7 +37,8 @@ const ServerAuthorContextProvider = props => {
   const [newServerLocalPassword, setNewServerLocalPassword] = useState("");
   const [newServerSecurityConnector, setNewServerSecurityConnector] = useState("");
   const [newServerRepository, setNewServerRepository] = useState("in-memory-repository");
-  const [newServerMaxPageSize, setNewServerMaxPageSize] = useState(1000);
+  const [newServerMaxPageSize, setNewServerMaxPageSize] = useState(100);
+  const [newServerEventBusURL, setNewServerEventBusURL] = useState(kafkaURL);
   // Access Services
   const [availableAccessServices, setAvailableAccessServices] = useState(accessServices);
   const [selectedAccessServices, setSelectedAccessServices] = useState(accessServices);
@@ -90,65 +96,15 @@ const ServerAuthorContextProvider = props => {
   
   useEffect(() => {
     const fetchLists = async () => {
-      const serverList = await fetchKnownServers();
-      setKnownServers(serverList.map((v) => { return { id: v, serverName: v, status: "known" } }));
-      const accessServices = await fetchAccessServices();
+      const serverList = await fetchKnownServers(tenantId, userId);
+      setKnownServers(serverList);
+      const accessServices = await fetchAccessServices(tenantId, userId);
       setAvailableAccessServices(accessServices);
       setSelectedAccessServices(accessServices);
     }
     fetchLists();
   }, []);
 
-
-  const fetchAccessServices = async () => {
-    const fetchAccessServicesURL = `/open-metadata/platform-services/users/${userId}/server-platform/registered-services/access-services`;
-    try {
-      const fetchAccessServicesResponse = await axios.get(fetchAccessServicesURL, {
-        params: {
-          tenantId,
-        },
-        timeout: 30000,
-      });
-      console.debug({fetchAccessServicesResponse});
-      if (fetchAccessServicesResponse.data.relatedHTTPCode === 200) {
-        return fetchAccessServicesResponse.data.services;
-      } else {
-        throw new Error("Error in fetchAccessServicesResponse");
-      }
-    } catch(error) {
-      if (error.code && error.code === 'ECONNABORTED') {
-        console.error("Error connecting to the platform. Please ensure the OMAG server platform is available.");
-      } else {
-        console.error("Error fetching access services from platform", { error });
-      }
-      throw error;
-    }
-  }
-
-  const fetchKnownServers = async () => {
-    console.log("called fetchKnownServers()");
-    const fetchKnownServersURL = `/open-metadata/platform-services/users/${userId}/server-platform/servers`;
-    try {
-      const fetchKnownServersResponse = await axios.get(fetchKnownServersURL, {
-        params: {
-          tenantId,
-        },
-        timeout: 30000,
-      });
-      if (fetchKnownServersResponse.data.relatedHTTPCode === 200) {
-        return fetchKnownServersResponse.data.serverList || [];
-      } else {
-        throw new Error(fetchKnownServersResponse.data.exceptionErrorMessage);
-      }
-    } catch(error) {
-      if (error.code && error.code === 'ECONNABORTED') {
-        console.error("Error connecting to the platform. Please ensure the OMAG server platform is available.");
-      } else {
-        console.error("Error fetching known servers.", { error });
-      }
-      throw error;
-    }
-  }
 
   const fetchServerConfig = async () => {
     console.log("called fetchServerConfig");
@@ -588,6 +544,8 @@ const ServerAuthorContextProvider = props => {
   const showConfigForm = () => {
     document.getElementById("server-list-container").style.display = "none";
     document.getElementById("server-config-container").style.display = "flex";
+    document.getElementById("server-type-container").style.display = "block";
+    setProgressIndicatorIndex(0);
   }
 
   const hideConfigForm = () => {
@@ -613,6 +571,7 @@ const ServerAuthorContextProvider = props => {
         newServerSecurityConnector, setNewServerSecurityConnector,
         newServerRepository, setNewServerRepository,
         newServerMaxPageSize, setNewServerMaxPageSize,
+        newServerEventBusURL, setNewServerEventBusURL,
         availableAccessServices, setAvailableAccessServices,
         selectedAccessServices, setSelectedAccessServices,
         newServerCohorts, setNewServerCohorts,
@@ -656,8 +615,8 @@ const ServerAuthorContextProvider = props => {
         stewardshipEnginesFormStartRef,
         integrationServicesFormStartRef,
         // Functions
-        fetchAccessServices,
-        fetchKnownServers,
+        // fetchAccessServices,
+        // fetchKnownServers,
         fetchServerConfig,
         generateBasicServerConfig,
         configureAccessServices,

@@ -12,13 +12,19 @@ const viewServices = [
     "serviceName": "Repository Explorer",
     "serviceURLMarker": "rex",
     "serviceDescription": "Explore open metadata instances.",
-    "serviceWiki": "https://odpi.github.io/egeria/open-metadata-implementation/access-services/subject-area/"
+    "serviceWiki": "https://odpi.github.io/egeria/open-metadata-implementation/view-services/rex-view/"
   },
   {
     "serviceName": "Type Explorer",
-    "serviceURLMarker": "type-explorer",
+    "serviceURLMarker": "tex",
     "serviceDescription": "Explore the open metadata types.",
-    "serviceWiki": "https://odpi.github.io/egeria/open-metadata-implementation/access-services/subject-area/"
+    "serviceWiki": "https://odpi.github.io/egeria/open-metadata-implementation/view-services/tex-view/"
+  },
+  {
+    "serviceName": "Dino",
+    "serviceURLMarker": "dino",
+    "serviceDescription": "Operate an open metadata topology.",
+    "serviceWiki": "https://odpi.github.io/egeria/open-metadata-implementation/view-services/dino-view/"
   }
 ]
 

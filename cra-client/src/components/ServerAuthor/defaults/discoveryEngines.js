@@ -3,10 +3,10 @@
 
 const discoveryEngines = [
   {
-    "serviceName": "Sample Discovery Engine",
-    "serviceURLMarker": "sample",
-    "serviceDescription": "Not a real discovery engine.",
-    "serviceWiki": ""
+    "serviceName": "Asset Analysis",
+    "serviceURLMarker": "asset-analysis",
+    "serviceDescription": "Analyses the content of an asset's real world counterpart, generates annotations in an open discovery report that is attached to the asset in the open metadata repositories .",
+    "serviceWiki": "https://egeria.odpi.org/open-metadata-implementation/engine-services/asset-analysis/"
   }
 ]
 

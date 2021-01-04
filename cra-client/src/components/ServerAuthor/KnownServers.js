@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import {
   Button,
   DataTable,
+  Loading,
   OverflowMenu,
   OverflowMenuItem,
 } from "carbon-components-react";
@@ -14,6 +15,7 @@ import {
 import axios from "axios";
 import { IdentificationContext } from "../../contexts/IdentificationContext";
 import { ServerAuthorContext } from "../../contexts/ServerAuthorContext";
+import fetchKnownServers from "./platformServices/fetchKnownServers";
 
 export default function KnownServers() {
 
@@ -23,7 +25,6 @@ export default function KnownServers() {
     setNotificationType,
     setNotificationTitle,
     setNotificationSubtitle,
-    fetchKnownServers,
     showConfigForm,
   } = useContext(ServerAuthorContext);
 
@@ -32,6 +33,9 @@ export default function KnownServers() {
     // Start servers
     const serverURLs = [];
     selectedRows.forEach((row) => {
+      // Set value to Loading component
+      row.cells[1].value = <Loading />
+      //
       serverURLs.push(`/open-metadata/admin-services/users/${userId}/servers/${row.id}/instance`);
     });
     for (const url of serverURLs) {
@@ -42,7 +46,7 @@ export default function KnownServers() {
           headers: {
             'Content-Type': 'application/json'
           },
-          timeout: 30000,
+          timeout: 60000,
         });
         if (startServerResponse.data.relatedHTTPCode !== 200) {
           console.error(startServerResponse.data);
@@ -64,8 +68,8 @@ export default function KnownServers() {
       }
     }
     // Refresh Server List
-    const serverList = await fetchKnownServers();
-    setKnownServers(serverList.map((v) => { return { id: v, serverName: v, status: "known" } }));
+    const serverList = await fetchKnownServers(tenantId, userId);
+    setKnownServers(serverList);
   }
 
   const stopServers = (selectedRows, del = false) => async () => {
@@ -73,6 +77,10 @@ export default function KnownServers() {
     // Stop servers
     const serverURLs = [];
     selectedRows.forEach((row) => {
+      // Set value to Loading component
+      // row.cells[1].value = <Loading />
+      row.disabled = true;
+      //
       let url = `/open-metadata/admin-services/users/${userId}/servers/${row.id}`
       if (!del) {
         url += '/instance';
@@ -88,7 +96,7 @@ export default function KnownServers() {
           headers: {
             'Content-Type': 'application/json'
           },
-          timeout: 30000,
+          timeout: 60000,
         });
         if (stopServerResponse.data.relatedHTTPCode !== 200) {
           console.error("Error occurred, response:", stopServerResponse.data);
@@ -110,8 +118,8 @@ export default function KnownServers() {
       }
     }
     // Refresh Server List
-    const serverList = await fetchKnownServers();
-    setKnownServers(serverList.map((v) => { return { id: v, serverName: v, status: "known" } }));
+    const serverList = await fetchKnownServers(tenantId, userId);
+    setKnownServers(serverList);
   }
 
   const headers = [

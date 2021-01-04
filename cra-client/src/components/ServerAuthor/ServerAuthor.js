@@ -36,10 +36,12 @@ import ConfigPreview from "./ConfigPreview";
 export default function ServerAuthor() {
 
   const { userId, serverName: tenantId } = useContext(IdentificationContext);
-  console.log(useContext(ServerAuthorContext))
+  
   const {
+    setKnownServers,
     newServerName,
     newServerLocalServerType, setNewServerLocalServerType,
+    newServerEventBusURL,
     newServerSecurityConnector,
     availableAccessServices,
     selectedAccessServices,
@@ -68,6 +70,7 @@ export default function ServerAuthor() {
     basicConfigFormStartRef,
     discoveryEnginesFormStartRef,
     stewardshipEnginesFormStartRef,
+    fetchKnownServers,
     fetchServerConfig,
     generateBasicServerConfig,
     registerCohort,
@@ -242,7 +245,14 @@ export default function ServerAuthor() {
     const configureEventBusURL = `/open-metadata/admin-services/users/${userId}/servers/${newServerName}/event-bus?topicURLRoot=egeriaTopics`;
     try {
       const configureEventBusURLResponse = await axios.post(configureEventBusURL, {
-        config: '',
+        config: {
+          "producer": {
+            "bootstrap.servers": newServerEventBusURL
+          },
+          "consumer":{
+            "bootstrap.servers": newServerEventBusURL
+          }
+        },
         tenantId,
       }, {
         headers: {
@@ -653,14 +663,14 @@ export default function ServerAuthor() {
     document.getElementById("loading-container").style.display = "block";
     // Enable View Services
     try {
-      if (selectedViewServices.length ===  availableViewServices.length) {
-        configureViewServices(newServerViewServiceRemoteServerURLRoot, newServerViewServiceRemoteServerName);
-      } else {
+      // if (selectedViewServices.length ===  availableViewServices.length) {
+      //   configureViewServices(newServerViewServiceRemoteServerURLRoot, newServerViewServiceRemoteServerName);
+      // } else {
         for (const service of selectedViewServices) {
           setLoadingText(`Enabling ${service} view service...`);
           configureViewServices(newServerViewServiceRemoteServerURLRoot, newServerViewServiceRemoteServerName, service);
         }
-      }
+      // }
     } catch(error) {
       setNotificationType("error");
       if (error.code && error.code ===  "ECONNABORTED") {
@@ -884,7 +894,7 @@ export default function ServerAuthor() {
     document.getElementById("loading-container").style.display = "block";
     // Issue the instance call to start the new server
     const startServerURL = `/open-metadata/admin-services/users/${userId}/servers/${newServerName}/instance`;
-    try{
+    try {
       const startServerResponse = await axios.post(startServerURL, {
         config: '',
         tenantId,
@@ -892,13 +902,16 @@ export default function ServerAuthor() {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 30000
+        timeout: 60000
       });
       if (startServerResponse.data.relatedHTTPCode ===  200) {
         setNotificationType("success");
         setNotificationTitle("Success!")
         setNotificationSubtitle(`Server instance deployed from configuration.`);
+        const serverList = await fetchKnownServers();
+        setKnownServers(serverList.map((v) => { return { id: v, serverName: v, status: "known" } }));
         document.getElementById("loading-container").style.display = "none";
+        document.getElementById("server-config-container").style.display = "none";
         document.getElementById("notification-container").style.display = "block";
         document.getElementById("server-list-container").style.display = "flex";
       } else {

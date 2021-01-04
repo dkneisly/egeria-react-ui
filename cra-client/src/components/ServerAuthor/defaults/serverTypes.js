@@ -23,24 +23,20 @@ const serverTypes = [
     label: "Conformance Test Server"
   },
   {
-    id: "discovery-server",
-    label: "Discovery Server"
+    id: "integration-daemon",
+    label: "Integration Daemon"
   },
   {
-    id: "stewardship-server",
-    label: "Stewardship Server"
+    id: "engine-host",
+    label: "Engine Host"
+  },
+  {
+    id: "data-engine-proxy",
+    label: "Data Engine Proxy"
   },
   {
     id: "open-lineage-server",
     label: "Open Lineage Server"
-  },
-  {
-    id: "security-officer-server",
-    label: "Security Officer Server"
-  },
-  {
-    id: "integration-daemon",
-    label: "Integration Daemon"
   },
 ]
 
