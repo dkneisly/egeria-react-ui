@@ -20,7 +20,7 @@
  */
 const serverNameMiddleWare = (req, res, next) => {
 
-  // console.log("before " + req.url);
+  console.log("before middleware " + req.url);
   const segmentArray = req.url.split("/");
   const segmentNumber = segmentArray.length;
 
@@ -28,7 +28,8 @@ const serverNameMiddleWare = (req, res, next) => {
     const segment1 = segmentArray.slice(1, 2).join("/");
     console.log("segment1 " + segment1);
 
-    if (segment1 != "servers" && segment1 != "open-metadata" && segment1 != "user") {
+    // if (segment1 != "servers" && segment1 != "open-metadata" && segment1 != "user") {
+    if (segment1 != "servers" && segment1 != "open-metadata" && segment1 != "user" && segment1 != "static") {
       // in a production scenario we are looking at login, favicon.ico and bundle.js for for now look for those in the last segment
       // TODO once we have development webpack, maybe the client should send a /js/ or a /static/ segment after the servername so we know to keep the subsequent segments.
 
@@ -47,7 +48,7 @@ const serverNameMiddleWare = (req, res, next) => {
       req.query.serverName = segment1;
     }
   }
-  // console.log("after " + req.url);
+  console.log("after middleware " + req.url);
   next();
 
 }
