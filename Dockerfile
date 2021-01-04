@@ -1,5 +1,5 @@
 # stage 1
-FROM node:erbium-alpine as client-build
+FROM node:erbium-alpine3.12 as client-build
 ENV PATH /app/node_modules/.bin:$PATH
 ENV NODE_OPTIONS=--max-old-space-size=8192
 
@@ -11,7 +11,7 @@ RUN npm install
 RUN npm run build
 
 # stage 2
-FROM node:erbium-alpine
+FROM node:erbium-alpine3.12
 ENV NODE_OPTIONS=--max-old-space-size=8192
 ENV NODE_ENV=production
 ENV EGERIA_PRESENTATIONSERVER_SERVER_datelake={"remoteServerName":"usafView1","remoteURL":"https://dev-kaiju-egeria-datalake:9443"}
