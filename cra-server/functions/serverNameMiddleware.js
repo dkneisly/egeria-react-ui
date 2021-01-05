@@ -38,7 +38,8 @@ const serverNameMiddleWare = (req, res, next) => {
       if (
         lastSegment == "bundle.js" ||
         lastSegment == "favicon.ico" ||
-        lastSegment == "login"
+        lastSegment == "login" ||
+        lastSegment == "egeria_logo.png"
       ) {
         req.url = "/" + lastSegment;
       } else {
