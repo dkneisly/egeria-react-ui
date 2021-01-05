@@ -1,5 +1,5 @@
 # stage 1
-FROM image-registry.openshift-image-registry.svc:5000/openshift/nodejs:latest as client-build
+FROM image-registry.openshift-image-registry.svc:5000/openshift/nodejs:latest AS build
 ENV PATH /app/node_modules/.bin:$PATH
 ENV NODE_OPTIONS=--max-old-space-size=8192
 
