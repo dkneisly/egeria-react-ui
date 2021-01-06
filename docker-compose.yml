@@ -21,14 +21,15 @@ services:
     container_name: egeria
     ports:
       - "9443:9443"
-  # egeria-react-ui:
-  #   build: .
-  #   container_name: egeria-react-ui
-  #   image: "egeria-react-ui:1.0.0"
-  #   environment: 
-  #     - EGERIA_PRESENTATIONSERVER_SERVER_aaa={"remoteServerName":"cocoView1","remoteURL":"https://egeria:9443"}
-  #   ports:
-  #     - "8091:8091"
+  egeria-react-ui:
+    # build: .
+    container_name: egeria-react-ui
+    image: "egeria-cra-client:1.0.1"
+    environment: 
+      - EGERIA_PRESENTATIONSERVER_SERVER_aaa={"remoteServerName":"cocoView1","remoteURL":"https://egeria:9443"}
+      - NODE_ENV=production
+    ports:
+      - "8091:8091"
 networks:
   default:
     external:

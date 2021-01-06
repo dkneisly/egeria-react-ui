@@ -17,7 +17,6 @@ ENV NODE_OPTIONS=--max-old-space-size=8192
 
 WORKDIR /app
 COPY --from=build-client /app/cra-client/build ./cra-client/build
-# COPY cra-client/build ./cra-client/build
 COPY cra-client/public ./cra-client/public
 COPY cra-server ./cra-server
 COPY ssl ./ssl
