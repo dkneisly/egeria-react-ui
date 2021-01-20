@@ -9,7 +9,7 @@
     "start:client": "cd ../cra-client && npm start",
     "build": "cd ../cra-client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "NODE_ENV=production node index.js"
+    "prod": "NODE_ENV=production nodemon index.js"
   },
   "contributors": [
     {
@@ -23,6 +23,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "keycloak-connect": "^12.0.2",
+    "keycloak-js": "^12.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
   },

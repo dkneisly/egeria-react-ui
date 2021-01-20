@@ -10,6 +10,7 @@ const https = require("https");
 const app = express();
 require("dotenv").config();
 
+const initKeycloak = require('./middleware/initKeycloak')
 const getServerInfoFromEnv = require('./functions/getServerInfoFromEnv');
 const serverNameMiddleWare = require('./functions/serverNameMiddleware');
 const passportConfiguration = require('./functions/passportConfiguration');
@@ -50,15 +51,17 @@ passport = passportConfiguration(passport);
 // make initialized object available to routes
 app.set('passport', passport)
 
-
+// enable keycloak authentication
+const keycloak = initKeycloak();
+app.use(keycloak.middleware());
 
 if (env === 'production') {
   app.use(express.static(path.join(__dirname, '../cra-client/build')));
   app.use(express.static(path.join(__dirname, '../cra-client/public')));
-  app.use('/', router);
+  app.use('/', keycloak.protect(), router);
   app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../cra-client/build/index.html')));
 } else {
-  app.use('/', router);
+  app.use('/', keycloak.protect(), router);
 }
 
 app.get('/', (req, res) => res.sendStatus(200));
